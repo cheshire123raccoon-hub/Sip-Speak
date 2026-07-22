@@ -325,9 +325,37 @@ function prevStep() {
         renderScreen();
     }
 }
-// ================= TEXT TO SPEECH (Reliable Version) =================
+// ================= TEXT TO SPEECH (Best Quality) =================
 function speakText(text) {
     // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    // Get the first word for dictionary lookup
+    const word = text.split(' ')[0].toLowerCase().replace(/[^a-z]/g, '');
+    
+    // Try to get audio from Dictionary API (real native pronunciation)
+    if (word.length > 1 && word.length < 30) {
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data) && data[0]?.phonetics) {
+                    const phonetic = data[0].phonetics.find(p => p.audio && p.audio.length > 0);
+                    if (phonetic && phonetic.audio) {
+                        const audio = new Audio(phonetic.audio);
+                        audio.play();
+                        return; // Audio played, exit
+                    }
+                }
+                // No audio found, use fallback
+                fallbackSpeak(text);
+            })
+            .catch(() => fallbackSpeak(text));
+    } else {
+        fallbackSpeak(text);
+    }
+}
+
+function fallbackSpeak(text) {
     window.speechSynthesis.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
@@ -336,51 +364,27 @@ function speakText(text) {
     utterance.pitch = 1.05;
     utterance.volume = 1;
     
-    // Get voices
+    // Get best available voice
     const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => 
+        v.name.includes('Google UK English Female') ||
+        v.name.includes('Samantha') ||
+        v.name.includes('Karen') ||
+        (v.lang === 'en-GB' && v.name.includes('Female'))
+    );
     
-    // If voices are available, use the best one
-    if (voices.length > 0) {
-        // Try to find UK English voice
-        const ukVoice = voices.find(v => v.lang === 'en-GB' || v.lang.startsWith('en-GB'));
-        const usVoice = voices.find(v => v.lang === 'en-US' || v.lang.startsWith('en-US'));
-        const anyEnglish = voices.find(v => v.lang.startsWith('en'));
-        
-        if (ukVoice) {
-            utterance.voice = ukVoice;
-        } else if (usVoice) {
-            utterance.voice = usVoice;
-        } else if (anyEnglish) {
-            utterance.voice = anyEnglish;
-        }
+    if (preferred) {
+        utterance.voice = preferred;
     }
     
-    // Speak
     window.speechSynthesis.speak(utterance);
-    
-    // Debug: log to console
-    console.log('Speaking:', text);
-    console.log('Available voices:', voices.length);
-}
-
-// Ensure voices are loaded
-if (typeof speechSynthesis !== 'undefined') {
-    // Load voices immediately
-    window.speechSynthesis.getVoices();
-    
-    // Reload when voices change
-    window.speechSynthesis.onvoiceschanged = () => {
-        console.log('Voices loaded:', window.speechSynthesis.getVoices().length);
-    };
 }
 
 // Pre-load voices
-if (typeof speechSynthesis !== 'undefined') {
-    window.speechSynthesis.onvoiceschanged = () => {
-        // Voices loaded
-    };
+window.speechSynthesis.getVoices();
+window.speechSynthesis.onvoiceschanged = () => {
     window.speechSynthesis.getVoices();
-}
+};
 // ================= INIT =================
 document.addEventListener('DOMContentLoaded', () => {
     renderScreen();
