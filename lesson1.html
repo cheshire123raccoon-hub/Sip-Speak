@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - Sip & Speak</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="lesson-page lesson-1">
+    <div class="app-container">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Back to Menu -->
+        <a href="index.html" class="back-to-menu">← Back to All Lessons</a>
+
+        <!-- Main Content Area -->
+        <main class="glass-card" id="mainContent">
+            <!-- Content will be injected here by JS -->
+        </main>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="visibility: hidden;">Back</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Start Lesson</button>
+        </div>
+    </div>
+
+    <script src="lesson1.js"></script>
+</body>
+</html>
