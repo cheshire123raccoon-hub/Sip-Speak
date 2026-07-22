@@ -241,8 +241,8 @@ function renderVocab() {
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
-                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen">🔊</button>
-                    <span class="front-word">${item.word}</span>
+<button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen" style="right: 55px;">🔊</button>
+<button class="audio-btn" onclick="event.stopPropagation(); openTranslator('${item.word}')" title="Translate" style="right: 15px;">🌐</button>                    <span class="front-word">${item.word}</span>
                     <p style="margin-top:10px; font-size:0.8rem; color: var(--text-secondary);">Tap to reveal</p>
                 </div>
                 <div class="flip-card-back">
@@ -549,11 +549,17 @@ function renderReflection() {
                 <li>Rate today's lesson using wellness vocabulary!</li>
             </ul>
         </div>
+        
+        <!-- ВОТ СЮДА ВСТАВЬ КНОПКУ: -->
+        <button class="btn btn-primary mt-20" onclick="generateCheatSheet()" style="width: 100%;">
+            📥 Download PDF Cheat Sheet
+        </button>
+        
         <div class="text-center mt-20">
             <h3 style="color: var(--primary); font-family: 'Comfortaa', cursive;">Namaste! 🧘✨</h3>
             <p style="margin-top: 10px;">Take care of your mind and body!</p>
         </div>
-    `;
+    `;  // ← Закрывающая кавычка и точка с запятой ОБЯЗАТЕЛЬНЫ!
 }
 
 // ================= TIMER LOGIC =================
@@ -671,3 +677,120 @@ window.speechSynthesis.onvoiceschanged = () => {
 document.addEventListener('DOMContentLoaded', () => {
     renderScreen();
 });
+// ================= MINI TRANSLATOR =================
+function openTranslator(word) {
+    // Показываем окно загрузки
+    showTranslatorModal(word, 'Переводим... ⏳');
+    
+    // Используем бесплатный MyMemory API (EN -> RU)
+    fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|ru`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.responseData && data.responseData.translatedText) {
+                const translation = data.responseData.translatedText;
+                showTranslatorModal(word, `<strong style="font-size: 1.2rem; color: var(--primary);">${translation}</strong>`);
+            } else {
+                throw new Error('No translation');
+            }
+        })
+        .catch(() => {
+            // Fallback: прямая ссылка на Яндекс
+            const yandexLink = `https://yandex.ru/translate/?text=${encodeURIComponent(word)}&lang=en-ru`;
+            showTranslatorModal(word, `<a href="${yandexLink}" target="_blank" style="color: var(--primary); text-decoration: underline;">Открыть в Яндекс Переводчике ↗</a>`);
+        });
+}
+
+function showTranslatorModal(word, content) {
+    // Создаем модальное окно, если его нет
+    let modal = document.getElementById('translatorModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'translatorModal';
+        modal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: flex; align-items: center; 
+            justify-content: center; z-index: 1000; opacity: 0; 
+            transition: opacity 0.3s ease;
+        `;
+        modal.innerHTML = `
+            <div style="background: white; padding: 30px; border-radius: 20px; 
+                        max-width: 400px; width: 90%; text-align: center; 
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.2); position: relative;">
+                <button onclick="closeTranslator()" style="position: absolute; top: 10px; right: 15px; 
+                           background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+                <h3 style="margin-top: 0; color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase;">Translation</h3>
+                <h2 style="color: var(--primary); margin: 10px 0;">${word}</h2>
+                <div id="translatorContent" style="margin-top: 15px; min-height: 40px; display: flex; align-items: center; justify-content: center;"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Закрытие по клику вне окна
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeTranslator();
+        });
+    }
+    
+    document.getElementById('translatorContent').innerHTML = content;
+    modal.style.opacity = '1';
+    modal.style.display = 'flex';
+}
+
+function closeTranslator() {
+    const modal = document.getElementById('translatorModal');
+    if (modal) {
+        modal.style.opacity = '0';
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
+    }
+}
+// ================= PDF CHEAT SHEET =================
+function generateCheatSheet() {
+    // Собираем все слова урока
+    let allWords = [];
+    if (lessonData.vocab) {
+        allWords = lessonData.vocab;
+    } else if (lessonData.vocabCategories) {
+        allWords = Object.values(lessonData.vocabCategories).flat();
+    }
+
+    // Формируем красивый HTML для PDF
+    const cheatSheetHTML = `
+        <div style="font-family: Arial, sans-serif; padding: 30px; color: #333;">
+            <h1 style="color: #76845B; text-align: center; border-bottom: 2px solid #76845B; padding-bottom: 10px;">
+                ☕ Sip & Speak: ${lessonData.title}
+            </h1>
+            <p style="text-align: center; color: #666; font-style: italic;">${lessonData.subtitle}</p>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-top: 30px;">
+                <tr style="background: #f4f4f4;">
+                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Word / Phrase</th>
+                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Definition</th>
+                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Example</th>
+                </tr>
+                ${allWords.map(item => `
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; color: #76845B;">${item.word}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">${item.def}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd; font-style: italic; color: #666;">"${item.ex}"</td>
+                    </tr>
+                `).join('')}
+            </table>
+            
+            <p style="text-align: center; margin-top: 40px; font-size: 0.8rem; color: #999;">
+                Generated by Sip & Speak App
+            </p>
+        </div>
+    `;
+
+    // Настройки PDF
+    const opt = {
+        margin: 10,
+        filename: `Sip_Speak_${lessonData.title.replace(/\s+/g, '_')}_CheatSheet.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // Генерируем и скачиваем
+    html2pdf().set(opt).from(cheatSheetHTML).save();
+}
