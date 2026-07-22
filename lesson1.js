@@ -325,66 +325,17 @@ function prevStep() {
         renderScreen();
     }
 }
-// ================= TEXT TO SPEECH (Best Quality) =================
+// ================= TEXT TO SPEECH (VoiceRSS) =================
 function speakText(text) {
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
+    const apiKey = 'e93484cf0c9444b2bd1921007b12b75e';
+    const encodedText = encodeURIComponent(text);
+    const audioUrl = `https://api.voicerss.org/?key=${apiKey}&hl=en-gb&c=mp3&f=8khz_8bit_mono&src=${encodedText}`;
     
-    // Get the first word for dictionary lookup
-    const word = text.split(' ')[0].toLowerCase().replace(/[^a-z]/g, '');
-    
-    // Try to get audio from Dictionary API (real native pronunciation)
-    if (word.length > 1 && word.length < 30) {
-        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
-            .then(response => response.json())
-            .then(data => {
-                if (Array.isArray(data) && data[0]?.phonetics) {
-                    const phonetic = data[0].phonetics.find(p => p.audio && p.audio.length > 0);
-                    if (phonetic && phonetic.audio) {
-                        const audio = new Audio(phonetic.audio);
-                        audio.play();
-                        return; // Audio played, exit
-                    }
-                }
-                // No audio found, use fallback
-                fallbackSpeak(text);
-            })
-            .catch(() => fallbackSpeak(text));
-    } else {
-        fallbackSpeak(text);
-    }
+    const audio = new Audio(audioUrl);
+    audio.play().catch(error => {
+        console.error('VoiceRSS error:', error);
+    });
 }
-
-function fallbackSpeak(text) {
-    window.speechSynthesis.cancel();
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-GB';
-    utterance.rate = 0.85;
-    utterance.pitch = 1.05;
-    utterance.volume = 1;
-    
-    // Get best available voice
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v => 
-        v.name.includes('Google UK English Female') ||
-        v.name.includes('Samantha') ||
-        v.name.includes('Karen') ||
-        (v.lang === 'en-GB' && v.name.includes('Female'))
-    );
-    
-    if (preferred) {
-        utterance.voice = preferred;
-    }
-    
-    window.speechSynthesis.speak(utterance);
-}
-
-// Pre-load voices
-window.speechSynthesis.getVoices();
-window.speechSynthesis.onvoiceschanged = () => {
-    window.speechSynthesis.getVoices();
-};
 // ================= INIT =================
 document.addEventListener('DOMContentLoaded', () => {
     renderScreen();

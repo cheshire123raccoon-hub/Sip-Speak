@@ -569,60 +569,16 @@ function prevStep() {
         renderScreen();
     }
 }
-// ================= TEXT TO SPEECH (Reliable Version) =================
+// ================= TEXT TO SPEECH (VoiceRSS) =================
 function speakText(text) {
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
+    const apiKey = 'e93484cf0c9444b2bd1921007b12b75e';
+    const encodedText = encodeURIComponent(text);
+    const audioUrl = `https://api.voicerss.org/?key=${apiKey}&hl=en-gb&c=mp3&f=8khz_8bit_mono&src=${encodedText}`;
     
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-GB';
-    utterance.rate = 0.85;
-    utterance.pitch = 1.05;
-    utterance.volume = 1;
-    
-    // Get voices
-    const voices = window.speechSynthesis.getVoices();
-    
-    // If voices are available, use the best one
-    if (voices.length > 0) {
-        // Try to find UK English voice
-        const ukVoice = voices.find(v => v.lang === 'en-GB' || v.lang.startsWith('en-GB'));
-        const usVoice = voices.find(v => v.lang === 'en-US' || v.lang.startsWith('en-US'));
-        const anyEnglish = voices.find(v => v.lang.startsWith('en'));
-        
-        if (ukVoice) {
-            utterance.voice = ukVoice;
-        } else if (usVoice) {
-            utterance.voice = usVoice;
-        } else if (anyEnglish) {
-            utterance.voice = anyEnglish;
-        }
-    }
-    
-    // Speak
-    window.speechSynthesis.speak(utterance);
-    
-    // Debug: log to console
-    console.log('Speaking:', text);
-    console.log('Available voices:', voices.length);
-}
-
-// Ensure voices are loaded
-if (typeof speechSynthesis !== 'undefined') {
-    // Load voices immediately
-    window.speechSynthesis.getVoices();
-    
-    // Reload when voices change
-    window.speechSynthesis.onvoiceschanged = () => {
-        console.log('Voices loaded:', window.speechSynthesis.getVoices().length);
-    };
-}
-// Pre-load voices
-if (typeof speechSynthesis !== 'undefined') {
-    window.speechSynthesis.onvoiceschanged = () => {
-        // Voices loaded
-    };
-    window.speechSynthesis.getVoices();
+    const audio = new Audio(audioUrl);
+    audio.play().catch(error => {
+        console.error('VoiceRSS error:', error);
+    });
 }
 // ================= INIT =================
 document.addEventListener('DOMContentLoaded', () => {
