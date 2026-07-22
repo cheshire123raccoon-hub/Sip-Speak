@@ -125,14 +125,16 @@ function renderWarmUp() {
 }
 
 function renderVocab() {
-    let cardsHtml = lessonData.vocab.map((item, index) => `
+    let cardsHtml = lessonData.vocab.map(item => `
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
+                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen">🔊</button>
                     <span class="front-word">${item.word}</span>
-                    <p style="margin-top:10px; font-size:0.85rem; color: var(--text-secondary);">Tap to reveal</p>
+                    <p style="margin-top:10px; font-size:0.8rem; color: var(--text-secondary);">Tap to reveal</p>
                 </div>
                 <div class="flip-card-back">
+                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.def}')" title="Listen">🔊</button>
                     <p class="back-def">${item.def}</p>
                     <p class="back-example">"${item.ex}"</p>
                 </div>
@@ -143,7 +145,7 @@ function renderVocab() {
     document.getElementById('mainContent').innerHTML = `
         <span class="emoji">💬</span>
         <h2>Lexical Chunks</h2>
-        <p>Tap each card to flip it. Read the definition and example aloud. Try to use these when talking about yourself!</p>
+        <p>Tap each card to flip it. Read the definition and example aloud.</p>
         <div class="mt-20">${cardsHtml}</div>
     `;
 }
@@ -323,7 +325,22 @@ function prevStep() {
         renderScreen();
     }
 }
-
+// ================= TEXT TO SPEECH =================
+function speakText(text) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+        
+        window.speechSynthesis.speak(utterance);
+    } else {
+        alert('Sorry, your browser does not support text-to-speech.');
+    }
+}
 // ================= INIT =================
 document.addEventListener('DOMContentLoaded', () => {
     renderScreen();
