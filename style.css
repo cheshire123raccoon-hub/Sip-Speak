@@ -802,3 +802,41 @@ li {
 .flip-card-back {
     position: relative;
 }
+/* === FIX FOR FLIP CARDS === */
+.flip-card {
+    height: 240px !important;
+    overflow: visible !important;
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.audio-btn {
+    top: 15px !important;
+    right: 15px !important;
+    z-index: 100 !important;
+    flex-shrink: 0 !important;
+}
+
+.front-word,
+.back-def,
+.back-example {
+    max-width: 90% !important;
+    word-wrap: break-word !important;
+}
+
+.flip-card-front > *,
+.flip-card-back > * {
+    pointer-events: none;
+}
+
+.flip-card-front .audio-btn,
+.flip-card-back .audio-btn {
+    pointer-events: auto !important;
+}
