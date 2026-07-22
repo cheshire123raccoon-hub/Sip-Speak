@@ -468,27 +468,6 @@ p, li {
 .flip-card-back .audio-btn {
     pointer-events: auto;
 }
-/* Audio button for vocabulary */
-.audio-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.95);
-    border: 2px solid var(--primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: all 0.3s ease;
-    z-index: 10;
-    padding: 0;
-    line-height: 1;
-}
-
 .audio-btn:hover {
     background: var(--primary);
     color: white;
