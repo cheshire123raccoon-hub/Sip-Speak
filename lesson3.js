@@ -494,20 +494,21 @@ function prevStep() {
         renderScreen();
     }
 }
-// ================= TEXT TO SPEECH =================
+// ================= TEXT TO SPEECH (ResponsiveVoice) =================
 function speakText(text) {
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US';
-        utterance.rate = 0.9;
-        utterance.pitch = 1;
-        utterance.volume = 1;
-        
-        window.speechSynthesis.speak(utterance);
+    if (typeof responsiveVoice !== 'undefined') {
+        // Use ResponsiveVoice (better quality)
+        responsiveVoice.speak(text, 'UK English Female', {
+            rate: 0.9,
+            pitch: 1,
+            volume: 1
+        });
     } else {
-        alert('Sorry, your browser does not support text-to-speech.');
+        // Fallback to browser synthesis if ResponsiveVoice fails
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
     }
 }
 // ================= INIT =================
