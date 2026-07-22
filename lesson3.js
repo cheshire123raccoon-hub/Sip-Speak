@@ -242,6 +242,41 @@ function renderVocab() {
         <div class="mt-20">${cardsHtml}</div>
     `;
 }
+// ================= VOCABULARY BY CATEGORY =================
+function renderVocabByCategory() {
+    const categories = Object.keys(lessonData.vocabCategories);
+    const currentCat = categories[currentCategory % categories.length];
+    const vocab = lessonData.vocabCategories[currentCat];
+    
+    let cardsHtml = vocab.map(item => `
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen">🔊</button>
+                    <span class="front-word">${item.word}</span>
+                    <p style="margin-top:10px; font-size:0.85rem; color: var(--text-secondary);">Tap to reveal</p>
+                </div>
+                <div class="flip-card-back">
+                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.def}')" title="Listen">🔊</button>
+                    <p class="back-def">${item.def}</p>
+                    <p class="back-example">"${item.ex}"</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    document.getElementById('mainContent').innerHTML = `
+        <span class="emoji">🎭</span>
+        <h2>${currentCat}</h2>
+        <p>Tap each card to flip. Read aloud and try to create your own sentence!</p>
+        <div class="mt-20">${cardsHtml}</div>
+        <div class="text-center mt-20">
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Category ${currentCategory + 1} of ${categories.length}</p>
+            <button class="btn btn-secondary mt-20" onclick="nextCategory()" style="width: 100%;">Next Category →</button>
+        </div>
+    `;
+}
+
 
 function nextCategory() {
     currentCategory++;
