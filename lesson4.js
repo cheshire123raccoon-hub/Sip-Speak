@@ -563,44 +563,54 @@ function prevStep() {
         renderScreen();
     }
 }
-// ================= TEXT TO SPEECH (Browser Native) =================
+/// ================= TEXT TO SPEECH (Reliable Version) =================
 function speakText(text) {
     // Cancel any ongoing speech
     window.speechSynthesis.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Try to get the best English voice
-    const voices = window.speechSynthesis.getVoices();
-    
-    // Prefer UK English voices
-    const ukVoice = voices.find(voice => 
-        voice.lang === 'en-GB' || 
-        voice.lang.startsWith('en-GB') ||
-        (voice.lang === 'en' && voice.name.includes('UK'))
-    );
-    
-    // Or US English voices
-    const usVoice = voices.find(voice => 
-        voice.lang === 'en-US' || 
-        voice.lang.startsWith('en-US')
-    );
-    
-    // Use the best available voice
-    if (ukVoice) {
-        utterance.voice = ukVoice;
-    } else if (usVoice) {
-        utterance.voice = usVoice;
-    }
-    
     utterance.lang = 'en-GB';
     utterance.rate = 0.85;
     utterance.pitch = 1.05;
     utterance.volume = 1;
     
+    // Get voices
+    const voices = window.speechSynthesis.getVoices();
+    
+    // If voices are available, use the best one
+    if (voices.length > 0) {
+        // Try to find UK English voice
+        const ukVoice = voices.find(v => v.lang === 'en-GB' || v.lang.startsWith('en-GB'));
+        const usVoice = voices.find(v => v.lang === 'en-US' || v.lang.startsWith('en-US'));
+        const anyEnglish = voices.find(v => v.lang.startsWith('en'));
+        
+        if (ukVoice) {
+            utterance.voice = ukVoice;
+        } else if (usVoice) {
+            utterance.voice = usVoice;
+        } else if (anyEnglish) {
+            utterance.voice = anyEnglish;
+        }
+    }
+    
+    // Speak
     window.speechSynthesis.speak(utterance);
+    
+    // Debug: log to console
+    console.log('Speaking:', text);
+    console.log('Available voices:', voices.length);
 }
 
+// Ensure voices are loaded
+if (typeof speechSynthesis !== 'undefined') {
+    // Load voices immediately
+    window.speechSynthesis.getVoices();
+    
+    // Reload when voices change
+    window.speechSynthesis.onvoiceschanged = () => {
+        console.log('Voices loaded:', window.speechSynthesis.getVoices().length);
+    };
+}
 // Pre-load voices
 if (typeof speechSynthesis !== 'undefined') {
     window.speechSynthesis.onvoiceschanged = () => {
