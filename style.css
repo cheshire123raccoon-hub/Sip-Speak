@@ -339,12 +339,13 @@ p, li {
     border-color: var(--primary);
 }
 
-/* Flip Cards */
+/* Flip Cards - FIXED VERSION */
 .flip-card {
     perspective: 1000px;
     height: 230px;
     margin-bottom: 20px;
     cursor: pointer;
+    position: relative;
 }
 
 .flip-card-inner {
@@ -355,15 +356,17 @@ p, li {
     transform-style: preserve-3d;
 }
 
-.flip-card.flipped .flip-card-inner { 
-    transform: rotateY(180deg); 
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
 }
 
-.flip-card-front, .flip-card-back {
+.flip-card-front,
+.flip-card-back {
     position: absolute;
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -374,6 +377,7 @@ p, li {
     background: rgba(255, 255, 255, 0.95);
     border: 2px solid var(--card-border);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
 .flip-card-back {
@@ -382,10 +386,10 @@ p, li {
     border-color: var(--accent);
 }
 
-.front-word { 
+.front-word {
     font-family: 'Comfortaa', cursive;
-    font-size: 1.6rem; 
-    font-weight: 600; 
+    font-size: 1.6rem;
+    font-weight: 600;
     color: var(--primary);
     margin-bottom: 8px;
 }
@@ -394,21 +398,52 @@ p, li {
     content: '☕ ';
 }
 
-.back-def { 
+.back-def {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.1rem; 
+    font-size: 1.1rem;
     font-weight: 500;
     color: var(--text-main);
     line-height: 1.5;
+    margin-bottom: 12px;
 }
 
-.back-example { 
+.back-example {
     font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem; 
-    font-style: italic; 
-    margin-top: 12px; 
+    font-size: 0.95rem;
+    font-style: italic;
     color: var(--text-secondary);
     line-height: 1.6;
+}
+
+/* Audio button for vocabulary */
+.audio-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    z-index: 10;
+    padding: 0;
+    line-height: 1;
+}
+
+.audio-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+.audio-btn:active {
+    transform: scale(0.95);
 }
 
 /* Timer */
