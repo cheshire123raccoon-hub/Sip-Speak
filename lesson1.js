@@ -126,21 +126,23 @@ function renderWarmUp() {
 
 function renderVocab() {
     let cardsHtml = lessonData.vocab.map(item => `
-    <div class="flip-card" onclick="this.classList.toggle('flipped')">
-        <div class="flip-card-inner">
-            <div class="flip-card-front">
-                <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen" style="right: 15px;">🔊</button>
-                <span class="front-word">${item.word}</span>
-                <p style="margin-top:10px; font-size:0.8rem; color: var(--text-secondary);">Tap to reveal</p>
-            </div>
-            <div class="flip-card-back">
-                <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.def}')" title="Listen" style="right: 15px;">🔊</button>
-                <p class="back-def">${item.def}</p>
-                <p class="back-example">"${item.ex}"</p>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front" style="position: relative;">
+                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen" style="position: absolute; right: 15px; top: 15px;">🔊</button>
+                    <button class="audio-btn" onclick="event.stopPropagation(); addToDictionary('${item.word}', '${item.def}', '${item.ex}')" title="Add to Dictionary" style="position: absolute; right: 60px; top: 15px;">⭐</button>
+                    <span class="front-word">${item.word}</span>
+                    <p style="margin-top:10px; font-size:0.8rem; color: var(--text-secondary);">Tap to reveal</p>
+                </div>
+                <div class="flip-card-back" style="position: relative;">
+                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.def}')" title="Listen" style="position: absolute; right: 15px; top: 15px;">🔊</button>
+                    <button class="audio-btn" onclick="event.stopPropagation(); addToDictionary('${item.word}', '${item.def}', '${item.ex}')" title="Add to Dictionary" style="position: absolute; right: 60px; top: 15px;">⭐</button>
+                    <p class="back-def">${item.def}</p>
+                    <p class="back-example">"${item.ex}"</p>
+                </div>
             </div>
         </div>
-    </div>
-`).join('');
+    `).join('');
 
     document.getElementById('mainContent').innerHTML = `
         <span class="emoji">💬</span>
@@ -149,7 +151,6 @@ function renderVocab() {
         <div class="mt-20">${cardsHtml}</div>
     `;
 }
-
 function renderVocabBattle() {
     let shuffled = [...lessonData.vocab].sort(() => Math.random() - 0.5);
     let cardsHtml = shuffled.map(item => `
@@ -401,6 +402,42 @@ window.speechSynthesis.getVoices();
 window.speechSynthesis.onvoiceschanged = () => {
     window.speechSynthesis.getVoices();
 };
+// ================= PERSONAL DICTIONARY =================
+function addToDictionary(word, definition, example) {
+    let dictionary = JSON.parse(localStorage.getItem('sipSpeakDictionary') || '[]');
+    
+    const exists = dictionary.find(item => item.word === word);
+    
+    if (exists) {
+        alert(`"${word}" is already in your dictionary!`);
+        return;
+    }
+    
+    dictionary.push({
+        word: word,
+        definition: definition,
+        example: example,
+        addedAt: new Date().toISOString()
+    });
+    
+    localStorage.setItem('sipSpeakDictionary', JSON.stringify(dictionary));
+    
+    showNotification(`"${word}" added to dictionary! ⭐`);
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+        background: #76845B; color: white; padding: 15px 30px;
+        border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        z-index: 10000; font-family: 'Poppins', sans-serif; font-size: 0.95rem;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.remove(), 2000);
+}
 // ================= INIT =================
 document.addEventListener('DOMContentLoaded', () => {
     renderScreen();
@@ -456,4 +493,40 @@ function generateCheatSheet() {
 
     // Генерируем и скачиваем
     html2pdf().set(opt).from(cheatSheetHTML).save();
+}
+// ================= PERSONAL DICTIONARY =================
+function addToDictionary(word, definition, example) {
+    let dictionary = JSON.parse(localStorage.getItem('sipSpeakDictionary') || '[]');
+    
+    const exists = dictionary.find(item => item.word === word);
+    
+    if (exists) {
+        alert(`"${word}" is already in your dictionary!`);
+        return;
+    }
+    
+    dictionary.push({
+        word: word,
+        definition: definition,
+        example: example,
+        addedAt: new Date().toISOString()
+    });
+    
+    localStorage.setItem('sipSpeakDictionary', JSON.stringify(dictionary));
+    
+    showNotification(`"${word}" added to dictionary! ⭐`);
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+        background: #76845B; color: white; padding: 15px 30px;
+        border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        z-index: 10000; font-family: 'Poppins', sans-serif; font-size: 0.95rem;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.remove(), 2000);
 }

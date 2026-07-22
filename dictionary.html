@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dictionary - Sip & Speak</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="lesson-page">
+    <div class="app-container">
+        <!-- Progress Bar (decorative) -->
+        <div class="progress-container">
+            <div class="progress-bar" style="width: 100%;"></div>
+        </div>
+
+        <!-- Back to Menu -->
+        <a href="index.html" class="back-to-menu">← Back to All Lessons</a>
+
+        <!-- Main Content -->
+        <main class="glass-card" id="mainContent">
+            <!-- Content will be injected here by JS -->
+        </main>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="clearDictionary()" style="background: #ff6b6b;">🗑️ Clear All</button>
+            <button class="btn btn-primary" onclick="exportDictionary()"> Export PDF</button>
+        </div>
+    </div>
+
+    <script src="dictionary.js"></script>
+</body>
+</html>

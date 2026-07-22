@@ -67,6 +67,7 @@
         <span class="level">B2-C1</span>
     </div>
     <div class="card-theme">Theme: Holistic Wellness</div>
+
 </div>
 
             <div class="lesson-card coming-soon">
@@ -87,10 +88,24 @@
                 </div>
             </div>
         </main>
-
+<!-- ДОБАВЬ ЭТУ КАРТОЧКУ ПОСЛЕ ВСЕХ УРОКОВ -->
+<div class="lesson-card" onclick="window.location.href='dictionary.html'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); cursor: pointer;">
+    <div class="card-icon">📚</div>
+    <h3>My Dictionary</h3>
+    <p>Your personal collection of words and phrases</p>
+    <div class="card-meta">
+        <span class="time">📖 <span id="dictCount">0</span> words</span>
+    </div>
+</div>
         <footer class="home-footer">
             <p>Made with 💚 for English learners</p>
         </footer>
     </div>
+<script>
+    // Update dictionary count on homepage
+    const dict = JSON.parse(localStorage.getItem('sipSpeakDictionary') || '[]');
+    const countEl = document.getElementById('dictCount');
+    if (countEl) countEl.textContent = dict.length;
+</script>
 </body>
 </html>

@@ -101,12 +101,11 @@ body {
     font-weight: 500;
 }
 
-/* Lessons Grid */
 .lessons-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 10px 0 30px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
 }
 
 .lesson-card {
@@ -364,7 +363,7 @@ p, li {
 
 .flip-card-front,
 .flip-card-back {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
@@ -428,7 +427,7 @@ p, li {
 .audio-btn {
     position: absolute;
     top: 15px;
-    right: 15px;
+    /* УДАЛИ ЭТУ СТРОКУ: right: 15px; */
     width: 36px;
     height: 36px;
     border-radius: 50%;
