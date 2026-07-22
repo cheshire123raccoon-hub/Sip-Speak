@@ -529,17 +529,74 @@ function prevStep() {
         renderScreen();
     }
 }
-// ================= TEXT TO SPEECH (VoiceRSS) =================
+// ================= TEXT TO SPEECH (Optimized Browser) =================
 function speakText(text) {
-    const apiKey = 'e93484cf0c9444b2bd1921007b12b75e';
-    const encodedText = encodeURIComponent(text);
-    const audioUrl = `https://api.voicerss.org/?key=${apiKey}&hl=en-gb&c=mp3&f=8khz_8bit_mono&src=${encodedText}`;
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
     
-    const audio = new Audio(audioUrl);
-    audio.play().catch(error => {
-        console.error('VoiceRSS error:', error);
-    });
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Get voices (with retry if not loaded yet)
+    let voices = window.speechSynthesis.getVoices();
+    
+    // If voices not loaded yet, wait and retry
+    if (voices.length === 0) {
+        window.speechSynthesis.onvoiceschanged = () => {
+            voices = window.speechSynthesis.getVoices();
+            setBestVoice(utterance, voices, text);
+        };
+    } else {
+        setBestVoice(utterance, voices, text);
+    }
 }
+
+function setBestVoice(utterance, voices, text) {
+    // Priority order for best voices
+    const voicePriority = [
+        'Google UK English Female',
+        'Microsoft Zira Desktop',
+        'Microsoft Zira',
+        'Samantha',
+        'Karen',
+        'Moira',
+        'Tessa'
+    ];
+    
+    // Find best voice
+    let bestVoice = null;
+    for (const voiceName of voicePriority) {
+        bestVoice = voices.find(v => v.name.includes(voiceName));
+        if (bestVoice) break;
+    }
+    
+    // If no preferred voice, find any English voice
+    if (!bestVoice) {
+        bestVoice = voices.find(v => v.lang === 'en-GB' && v.name.includes('Female')) ||
+                   voices.find(v => v.lang === 'en-US' && v.name.includes('Female')) ||
+                   voices.find(v => v.lang.startsWith('en'));
+    }
+    
+    // Apply voice
+    if (bestVoice) {
+        utterance.voice = bestVoice;
+        utterance.lang = bestVoice.lang;
+    } else {
+        utterance.lang = 'en-GB';
+    }
+    
+    // Settings for natural sound
+    utterance.rate = 0.9;   // Slightly slower
+    utterance.pitch = 1.05; // Slightly higher
+    utterance.volume = 1;
+    
+    window.speechSynthesis.speak(utterance);
+}
+
+// Pre-load voices on page load
+window.speechSynthesis.getVoices();
+window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+};
 // ================= INIT =================
 document.addEventListener('DOMContentLoaded', () => {
     renderScreen();
