@@ -248,9 +248,7 @@ function renderVocab() {
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
-<button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen" style="right: 55px;">🔊</button>
-<button class="audio-btn" onclick="event.stopPropagation(); openTranslator('${item.word}')" title="Translate" style="right: 15px;">🌐</button>                    <span class="front-word">${item.word}</span>
-                    <p style="margin-top:10px; font-size:0.8rem; color: var(--text-secondary);">Tap to reveal</p>
+<button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen" style="right: 15px;">🔊</button>                    <p style="margin-top:10px; font-size:0.8rem; color: var(--text-secondary);">Tap to reveal</p>
                 </div>
                 <div class="flip-card-back">
                     <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.def}')" title="Listen">🔊</button>
@@ -682,72 +680,7 @@ window.speechSynthesis.onvoiceschanged = () => {
 document.addEventListener('DOMContentLoaded', () => {
     renderScreen();
 });
-// ================= MINI TRANSLATOR =================
-function openTranslator(word) {
-    // Показываем окно загрузки
-    showTranslatorModal(word, 'Переводим... ⏳');
-    
-    // Используем бесплатный MyMemory API (EN -> RU)
-    fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|ru`)
-        .then(res => res.json())
-        .then(data => {
-            if (data.responseData && data.responseData.translatedText) {
-                const translation = data.responseData.translatedText;
-                showTranslatorModal(word, `<strong style="font-size: 1.2rem; color: var(--primary);">${translation}</strong>`);
-            } else {
-                throw new Error('No translation');
-            }
-        })
-        .catch(() => {
-            // Fallback: прямая ссылка на Яндекс
-            const yandexLink = `https://yandex.ru/translate/?text=${encodeURIComponent(word)}&lang=en-ru`;
-            showTranslatorModal(word, `<a href="${yandexLink}" target="_blank" style="color: var(--primary); text-decoration: underline;">Открыть в Яндекс Переводчике ↗</a>`);
-        });
-}
 
-function showTranslatorModal(word, content) {
-    // Создаем модальное окно, если его нет
-    let modal = document.getElementById('translatorModal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'translatorModal';
-        modal.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: flex; align-items: center; 
-            justify-content: center; z-index: 1000; opacity: 0; 
-            transition: opacity 0.3s ease;
-        `;
-        modal.innerHTML = `
-            <div style="background: white; padding: 30px; border-radius: 20px; 
-                        max-width: 400px; width: 90%; text-align: center; 
-                        box-shadow: 0 10px 40px rgba(0,0,0,0.2); position: relative;">
-                <button onclick="closeTranslator()" style="position: absolute; top: 10px; right: 15px; 
-                           background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
-                <h3 style="margin-top: 0; color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase;">Translation</h3>
-                <h2 style="color: var(--primary); margin: 10px 0;">${word}</h2>
-                <div id="translatorContent" style="margin-top: 15px; min-height: 40px; display: flex; align-items: center; justify-content: center;"></div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        
-        // Закрытие по клику вне окна
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeTranslator();
-        });
-    }
-    
-    document.getElementById('translatorContent').innerHTML = content;
-    modal.style.opacity = '1';
-    modal.style.display = 'flex';
-}
-
-function closeTranslator() {
-    const modal = document.getElementById('translatorModal');
-    if (modal) {
-        modal.style.opacity = '0';
-        setTimeout(() => { modal.style.display = 'none'; }, 300);
-    }
-}
 // ================= PDF CHEAT SHEET =================
 function generateCheatSheet() {
     // Собираем все слова урока
