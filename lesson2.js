@@ -598,7 +598,9 @@ function nextStep() {
     if (currentStep < totalSteps - 1) {
         currentStep++;
         renderScreen();
+        window.scrollTo({ top: 0, behavior: 'smooth' });  // ← ДОБАВИТЬ ЭТУ СТРОКУ
     } else {
+        // Last step - go back to home
         window.location.href = 'index.html';
     }
 }
@@ -607,6 +609,7 @@ function prevStep() {
     if (currentStep > 0) {
         currentStep--;
         renderScreen();
+        window.scrollTo({ top: 0, behavior: 'smooth' });  // ← ДОБАВИТЬ ЭТУ СТРОКУ
     }
 }
 // ================= TEXT TO SPEECH (Optimized Browser) =================
