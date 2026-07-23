@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music That Shapes Us - Sip & Speak</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Comfortaa:wght@400;500;600;700&family=Caveat:wght@400;600;700&family=Fredoka+One&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="lesson-page lesson-5">
+    <div class="app-container">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Progress Saved Indicator -->
+        <div class="progress-saved" id="progressSaved">💾 Progress saved!</div>
+
+        <!-- Back to Menu -->
+        <a href="index.html" class="back-to-menu">← Back to All Lessons</a>
+
+        <!-- Main Content Area -->
+        <main class="glass-card" id="mainContent">
+            <!-- Content will be injected here by JS -->
+        </main>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()">← Previous</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Start Lesson</button>
+        </div>
+    </div>
+
+    <script src="lesson5.js"></script>
+</body>
+</html>

@@ -1,6 +1,120 @@
 /* ================= FONTS ================= */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Comfortaa:wght@400;500;600;700&display=swap');
+/* ================= FONTS FOR LESSON 5 ================= */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Fredoka+One&family=Quicksand:wght@400;600;700&display=swap');
 
+/* Music Lesson Specific Styles */
+.lesson-5 .primary-text {
+    color: #B20B13;
+}
+
+.lesson-5 .secondary-text {
+    color: #6E4644;
+}
+
+.lesson-5 .accent-text {
+    color: #2A4562;
+}
+
+.lesson-5 .bg-primary {
+    background: #B20B13;
+}
+
+.lesson-5 .bg-secondary {
+    background: #FDECDC;
+}
+
+/* Flexible group cards */
+.group-task-card {
+    background: linear-gradient(135deg, #FDECDC 0%, #FFE5D0 100%);
+    border: 2px solid #6E4644;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.group-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.group-btn {
+    padding: 10px 20px;
+    border: 2px solid #B20B13;
+    background: white;
+    color: #B20B13;
+    border-radius: 25px;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.group-btn:hover,
+.group-btn.active {
+    background: #B20B13;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(178,11,19,0.3);
+}
+
+/* Music player simulation */
+.music-card {
+    background: linear-gradient(135deg, #2A4562 0%, #1a3045 100%);
+    color: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(42,69,98,0.3);
+}
+
+.music-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.music-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: #B20B13;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.music-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(178,11,19,0.4);
+}
+
+/* Progress save indicator */
+.progress-saved {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #6E4644;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10000;
+}
+
+.progress-saved.show {
+    opacity: 1;
+}
 /* ================= HOME PAGE - COFFEE THEME ================= */
 .home-page {
     --bg-gradient: linear-gradient(135deg, #faf8f3 0%, #f5efe6 50%, #e8dfd1 100%);
