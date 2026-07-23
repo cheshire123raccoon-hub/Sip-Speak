@@ -129,8 +129,8 @@ function renderVocab() {
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
-                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen" style="position: absolute; right: 15px; top: 15px;"></button>
-                    <button class="audio-btn" onclick="event.stopPropagation(); addToDictionary('${item.word}', '${item.def}', '${item.ex}')" title="Add to Dictionary" style="position: absolute; right: 60px; top: 15px;">⭐</button>
+<button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen" style="position: absolute; right: 15px; top: 15px;">🔊</button>                    
+<button class="audio-btn" onclick="event.stopPropagation(); addToDictionary('${item.word}', '${item.def}', '${item.ex}')" title="Add to Dictionary" style="position: absolute; right: 60px; top: 15px;">⭐</button>
                     <span class="front-word">${item.word}</span>
                     <p style="margin-top:10px; font-size:0.8rem; color: var(--text-secondary);">Tap to reveal</p>
                 </div>
@@ -284,9 +284,9 @@ function renderReflection() {
         </button>
         
         <div class="text-center mt-20">
-            <h3 style="color: var(--primary); font-family: 'Comfortaa', cursive;">Namaste! 🧘✨</h3>
-            <p style="margin-top: 10px;">Take care of your mind and body!</p>
-        </div>
+    <h3 style="color: var(--primary); font-family: 'Comfortaa', cursive;">Cheers to your journey! ☕✨</h3>
+    <p style="margin-top: 10px;">Keep sharing your story and connecting with others!</p>
+</div>
     `;  // ← Закрывающая кавычка и точка с запятой ОБЯЗАТЕЛЬНЫ!
 }
 
@@ -447,7 +447,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ================= PDF CHEAT SHEET =================
 function generateCheatSheet() {
-    // Собираем все слова урока
     let allWords = [];
     if (lessonData.vocab) {
         allWords = lessonData.vocab;
@@ -455,150 +454,48 @@ function generateCheatSheet() {
         allWords = Object.values(lessonData.vocabCategories).flat();
     }
 
-    // Цвета для нумерации (как на референсе)
-    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2'];
-
-    // Формируем красивый HTML для PDF
     const cheatSheetHTML = `
-        <div style="
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 40px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        ">
-            <!-- Header -->
-            <div style="
-                text-align: center;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 30px;
-                border-radius: 20px;
-                margin-bottom: 30px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            ">
-                <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700;">☕ SIP & SPEAK</h1>
-                <p style="margin: 10px 0 0 0; font-size: 1.2rem; opacity: 0.95;">${lessonData.title}</p>
-                <p style="margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9;">${lessonData.subtitle}</p>
+        <div style="font-family: 'Quicksand', sans-serif; padding: 50px 40px; background: #FFF9F5; min-height: 100vh;">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">☕</div>
+                <h1 style="font-family: 'Fredoka One', cursive; font-size: 3rem; color: #8B6F47; margin: 0; letter-spacing: 2px;">Sip & Speak</h1>
+                <h2 style="font-family: 'Quicksand', sans-serif; font-size: 1.3rem; color: #D4A574; margin: 10px 0 0 0; font-weight: 600;">${lessonData.title}</h2>
+                <div style="width: 60px; height: 3px; background: #8B6F47; margin: 15px auto 0 auto;"></div>
             </div>
 
-            <div style="display: flex; gap: 25px;">
-                <!-- Main Table -->
-                <div style="flex: 1; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
-                    <h2 style="color: #667eea; margin-top: 0; border-bottom: 3px solid #667eea; padding-bottom: 10px;">
-                        📚 Vocabulary List
-                    </h2>
-                    
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                                <th style="padding: 12px; text-align: left; border-radius: 8px 0 0 0; width: 5%;">#</th>
-                                <th style="padding: 12px; text-align: left; width: 30%;">Word / Phrase</th>
-                                <th style="padding: 12px; text-align: left; width: 35%;">Definition</th>
-                                <th style="padding: 12px; text-align: left; border-radius: 0 8px 0 0; width: 30%;">Example</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${allWords.map((item, index) => `
-                                <tr style="background: ${index % 2 === 0 ? '#f8f9fa' : 'white'}; border-bottom: 1px solid #e0e0e0;">
-                                    <td style="padding: 15px 10px;">
-                                        <div style="
-                                            width: 28px;
-                                            height: 28px;
-                                            background: ${colors[index % colors.length]};
-                                            color: white;
-                                            border-radius: 50%;
-                                            display: flex;
-                                            align-items: center;
-                                            justify-content: center;
-                                            font-weight: bold;
-                                            font-size: 0.9rem;
-                                        ">
-                                            ${index + 1}
-                                        </div>
-                                    </td>
-                                    <td style="padding: 15px; font-weight: 600; color: #667eea; font-size: 0.95rem;">${item.word}</td>
-                                    <td style="padding: 15px; color: #555; font-size: 0.9rem;">${item.def}</td>
-                                    <td style="padding: 15px; color: #777; font-style: italic; font-size: 0.85rem;">"${item.ex}"</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Sidebar -->
-                <div style="width: 280px; display: flex; flex-direction: column; gap: 20px;">
-                    <!-- Tips Box -->
-                    <div style="
-                        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-                        padding: 20px;
-                        border-radius: 15px;
-                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                    ">
-                        <h3 style="color: #e67e22; margin-top: 0; font-size: 1.1rem;">💡 Tips to Remember</h3>
-                        <ul style="padding-left: 20px; margin: 0;">
-                            <li style="margin-bottom: 10px; color: #555; font-size: 0.9rem;">Use these words in sentences</li>
-                            <li style="margin-bottom: 10px; color: #555; font-size: 0.9rem;">Practice speaking aloud</li>
-                            <li style="margin-bottom: 10px; color: #555; font-size: 0.9rem;">Review daily for best results</li>
-                            <li style="color: #555; font-size: 0.9rem;">Create your own examples</li>
-                        </ul>
-                    </div>
-
-                    <!-- Why Learn Box -->
-                    <div style="
-                        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-                        padding: 20px;
-                        border-radius: 15px;
-                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                    ">
-                        <h3 style="color: #16a085; margin-top: 0; font-size: 1.1rem;">🎯 Why This Matters</h3>
-                        <ul style="padding-left: 20px; margin: 0;">
-                            <li style="margin-bottom: 10px; color: #555; font-size: 0.9rem;">Sound more natural</li>
-                            <li style="margin-bottom: 10px; color: #555; font-size: 0.9rem;">Express yourself better</li>
-                            <li style="margin-bottom: 10px; color: #555; font-size: 0.9rem;">Understand native speakers</li>
-                            <li style="color: #555; font-size: 0.9rem;">Boost your confidence</li>
-                        </ul>
-                    </div>
-
-                    <!-- Quote Box -->
-                    <div style="
-                        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-                        padding: 20px;
-                        border-radius: 15px;
-                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                        text-align: center;
-                    ">
-                        <p style="margin: 0; font-style: italic; color: #555; font-size: 0.95rem;">
-                            "Practice makes perfect! Keep learning, keep growing! 🌱"
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div style="
-                text-align: center;
-                margin-top: 25px;
-                padding: 15px;
-                background: white;
-                border-radius: 10px;
-                color: #667eea;
-                font-weight: 600;
-            ">
-                ☕ Sip & Speak — Learn Today, Speak Tomorrow, Succeed Forever! 
-            </div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #D4A574;">
+                        <th style="padding: 12px 8px; text-align: center; width: 8%; font-size: 0.85rem; color: #8B6F47; font-weight: 700;">know</th>
+                        <th style="padding: 12px 8px; text-align: left; width: 32%; font-size: 0.85rem; color: #8B6F47; font-weight: 700;">word/phrase</th>
+                        <th style="padding: 12px 8px; text-align: left; width: 30%; font-size: 0.85rem; color: #8B6F47; font-weight: 700;">definition</th>
+                        <th style="padding: 12px 8px; text-align: left; width: 30%; font-size: 0.85rem; color: #8B6F47; font-weight: 700;">example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${allWords.map((item, index) => `
+                        <tr style="border-bottom: 1px solid #F0E6DC;">
+                            <td style="padding: 14px 8px; text-align: center;">
+                                <div style="width: 18px; height: 18px; border: 1.5px solid #D4A574; display: inline-block;"></div>
+                            </td>
+                            <td style="padding: 14px 8px; font-weight: 700; color: #8B6F47; font-size: 0.95rem;">${item.word}</td>
+                            <td style="padding: 14px 8px; color: #666; font-size: 0.9rem;">${item.def}</td>
+                            <td style="padding: 14px 8px; color: #888; font-style: italic; font-size: 0.85rem;">"${item.ex}"</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
         </div>
     `;
 
-    // Настройки PDF (альбомная ориентация!)
     const opt = {
         margin: [10, 10, 10, 10],
         filename: `Sip_Speak_${lessonData.title.replace(/\s+/g, '_')}_CheatSheet.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // Генерируем и скачиваем
     html2pdf().set(opt).from(cheatSheetHTML).save();
 }
 // ================= PERSONAL DICTIONARY =================
