@@ -128,13 +128,13 @@ function renderVocab() {
     let cardsHtml = lessonData.vocab.map(item => `
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
             <div class="flip-card-inner">
-                <div class="flip-card-front" style="position: relative;">
-                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen" style="position: absolute; right: 15px; top: 15px;">🔊</button>
+                <div class="flip-card-front">
+                    <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.word}')" title="Listen" style="position: absolute; right: 15px; top: 15px;"></button>
                     <button class="audio-btn" onclick="event.stopPropagation(); addToDictionary('${item.word}', '${item.def}', '${item.ex}')" title="Add to Dictionary" style="position: absolute; right: 60px; top: 15px;">⭐</button>
                     <span class="front-word">${item.word}</span>
                     <p style="margin-top:10px; font-size:0.8rem; color: var(--text-secondary);">Tap to reveal</p>
                 </div>
-                <div class="flip-card-back" style="position: relative;">
+                <div class="flip-card-back">
                     <button class="audio-btn" onclick="event.stopPropagation(); speakText('${item.def}')" title="Listen" style="position: absolute; right: 15px; top: 15px;">🔊</button>
                     <button class="audio-btn" onclick="event.stopPropagation(); addToDictionary('${item.word}', '${item.def}', '${item.ex}')" title="Add to Dictionary" style="position: absolute; right: 60px; top: 15px;">⭐</button>
                     <p class="back-def">${item.def}</p>
