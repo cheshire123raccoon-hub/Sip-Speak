@@ -5,7 +5,7 @@ const lessonData = {
     duration: "60-75 min",
     level: "B2-C1",
     theme: "Music & Identity",
-    emoji: "🎵",
+    emoji: "",
     
     vocab: [
         { word: "soundtrack", def: "music that accompanies a particular event or period", ex: "This song was the soundtrack to my teenage years." },
@@ -15,7 +15,11 @@ const lessonData = {
         { word: "rhythm", def: "a strong, regular, repeated pattern of sound", ex: "The rhythm of this song makes you want to dance." },
         { word: "lyrics", def: "the words of a song", ex: "I can't understand the lyrics - they're too quiet." },
         { word: "genre", def: "a particular style or category of music", ex: "What's your favorite music genre?" },
-        { word: "playlist", def: "a list of songs prepared for playing in sequence", ex: "I created a playlist for my workout sessions." }
+        { word: "playlist", def: "a list of songs prepared for playing in sequence", ex: "I created a playlist for my workout sessions." },
+        { word: "melody", def: "a sequence of single notes that is musically satisfying", ex: "The melody is so catchy, I can't stop humming it." },
+        { word: "harmony", def: "the combination of simultaneously sounded musical notes", ex: "The vocal harmony in this song is beautiful." },
+        { word: "tempo", def: "the speed or pace of a given piece", ex: "The tempo increases in the chorus." },
+        { word: "beat", def: "the basic unit of musical time", ex: "I love dancing to the beat of this song." }
     ],
     
     vocabCategories: {
@@ -23,17 +27,34 @@ const lessonData = {
             { word: "pop", def: "popular music with catchy melodies", ex: "She loves listening to pop music." },
             { word: "rock", def: "music with strong rhythm and electric guitars", ex: "Classic rock never gets old." },
             { word: "jazz", def: "music with improvisation and complex harmonies", ex: "Jazz clubs have a special atmosphere." },
-            { word: "classical", def: "traditional orchestral music", ex: "Classical music helps me concentrate." }
+            { word: "classical", def: "traditional orchestral music", ex: "Classical music helps me concentrate." },
+            { word: "hip-hop", def: "music featuring rapping and rhythmic beats", ex: "Hip-hop culture has influenced fashion worldwide." },
+            { word: "electronic", def: "music produced using electronic instruments", ex: "Electronic dance music is popular at festivals." },
+            { word: "indie", def: "music produced independently from commercial record labels", ex: "I prefer indie bands to mainstream artists." },
+            { word: "R&B", def: "rhythm and blues, combining jazz and gospel", ex: "R&B has evolved significantly over the decades." }
         ],
         "Emotions & Music": [
             { word: "energetic", def: "showing great energy and enthusiasm", ex: "This track is so energetic!" },
             { word: "soothing", def: "calming and relaxing", ex: "Her voice is incredibly soothing." },
-            { word: "powerful", def: "having great emotional impact", ex: "That was a powerful performance." }
+            { word: "powerful", def: "having great emotional impact", ex: "That was a powerful performance." },
+            { word: "mellow", def: "soft, smooth, and relaxed", ex: "I enjoy mellow jazz on Sunday mornings." },
+            { word: "intense", def: "extremely strong or extreme", ex: "The concert was incredibly intense." },
+            { word: "sentimental", def: "prompted by feelings of tenderness or sadness", ex: "This song makes me feel sentimental." }
         ],
         "Music Actions": [
             { word: "to jam", def: "to play music informally", ex: "Let's jam together this weekend!" },
             { word: "to vibe", def: "to feel a connection with music", ex: "I'm really vibing with this song." },
-            { word: "to binge-listen", def: "to listen to many songs continuously", ex: "I binge-listened to the entire album." }
+            { word: "to binge-listen", def: "to listen to many songs continuously", ex: "I binge-listened to the entire album." },
+            { word: "to resonate", def: "to evoke a feeling of shared emotion", ex: "These lyrics really resonate with me." },
+            { word: "to discover", def: "to find music for the first time", ex: "I discovered this artist through a friend." },
+            { word: "to perform", def: "to present music to an audience", ex: "She performs at local cafes every weekend." }
+        ],
+        "Music Industry": [
+            { word: "album", def: "a collection of songs released together", ex: "Their new album has 12 tracks." },
+            { word: "single", def: "a song released separately from an album", ex: "The single topped the charts." },
+            { word: "concert", def: "a live music performance", ex: "I bought tickets for the concert." },
+            { word: "venue", def: "a place where concerts happen", ex: "The venue has excellent acoustics." },
+            { word: "audience", def: "the people who listen to a performance", ex: "The audience cheered loudly." }
         ]
     }
 };
@@ -135,6 +156,12 @@ function renderScreen() {
         case 6: renderVocabBattle(); break;
         case 7: renderReflection(); break;
     }
+    
+    // ВСЕГДА ОБНОВЛЯЕМ КНОПКИ
+    nextBtn.style.display = 'block';
+    prevBtn.style.display = 'block';
+    if (currentStep === 0) prevBtn.style.display = 'none';
+    if (currentStep === totalSteps - 1) nextBtn.style.display = 'none';
 }
 
 function updateProgress() {
@@ -185,10 +212,48 @@ function renderWarmUp() {
             <p style="font-size: 1.2rem; margin: 0; font-weight: 500;">${randomQ}</p>
         </div>
         
-        <div class="group-selector mt-20">
-            <button class="group-btn ${selectedGroupSize === 'solo' ? 'active' : ''}" onclick="setGroupSize('solo')"> Solo</button>
-            <button class="group-btn ${selectedGroupSize === 'pair' ? 'active' : ''}" onclick="setGroupSize('pair')">👥 Pair</button>
-            <button class="group-btn ${selectedGroupSize === 'group' ? 'active' : ''}" onclick="setGroupSize('group')">👥👥 Group (3+)</button>
+        <div class="mt-20" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+            <button onclick="setGroupSize('solo')" style="
+                padding: 12px 25px;
+                border: 2px solid #B20B13;
+                background: ${selectedGroupSize === 'solo' ? '#B20B13' : 'white'};
+                color: ${selectedGroupSize === 'solo' ? 'white' : '#B20B13'};
+                border-radius: 25px;
+                cursor: pointer;
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 600;
+                font-size: 0.95rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            "> Solo</button>
+            
+            <button onclick="setGroupSize('pair')" style="
+                padding: 12px 25px;
+                border: 2px solid #B20B13;
+                background: ${selectedGroupSize === 'pair' ? '#B20B13' : 'white'};
+                color: ${selectedGroupSize === 'pair' ? 'white' : '#B20B13'};
+                border-radius: 25px;
+                cursor: pointer;
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 600;
+                font-size: 0.95rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            ">👥 Pair</button>
+            
+            <button onclick="setGroupSize('group')" style="
+                padding: 12px 25px;
+                border: 2px solid #B20B13;
+                background: ${selectedGroupSize === 'group' ? '#B20B13' : 'white'};
+                color: ${selectedGroupSize === 'group' ? 'white' : '#B20B13'};
+                border-radius: 25px;
+                cursor: pointer;
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 600;
+                font-size: 0.95rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            ">👥👥 Group (3+)</button>
         </div>
         
         <button class="btn btn-secondary mt-20" onclick="renderWarmUp()" style="width: 100%;">🎲 Shuffle Question</button>
@@ -276,30 +341,31 @@ function renderListeningActivity() {
         <h2 style="color: #B20B13;">Active Listening</h2>
         <p>Choose a song that's meaningful to you and analyze it:</p>
         
-        <div class="music-card">
-            <h3 style="margin-top: 0; font-family: 'Caveat', cursive; font-size: 2rem;">Your Song Analysis</h3>
-            <div style="text-align: left; margin-top: 25px;">
+        <div class="group-task-card" style="background: linear-gradient(135deg, #2A4562 0%, #1a3045 100%); color: white; border: none;">
+            <h3 style="font-family: 'Caveat', cursive; font-size: 2rem; margin-top: 0; text-align: center;">Your Song Analysis</h3>
+            
+            <div style="margin-top: 25px; line-height: 2.2;">
                 <p><strong>🎵 Title:</strong> _______________________</p>
-                <p><strong>👤 Artist:</strong> _______________________</p>
+                <p><strong> Artist:</strong> _______________________</p>
                 <p><strong>🎼 Genre:</strong> _______________________</p>
                 <p><strong>💭 Mood/Emotion:</strong> _______________________</p>
-                <p><strong>📖 What story does it tell?</strong><br>_______________________</p>
+                <p><strong> What story does it tell?</strong><br>_______________________</p>
                 <p><strong>🎯 Why is it meaningful to you?</strong><br>_______________________</p>
-            </div>
-            <div class="music-controls">
-                <button class="music-btn">⏮</button>
-                <button class="music-btn">▶</button>
-                <button class="music-btn"></button>
+                <p><strong> Favorite lyrics:</strong><br>_______________________</p>
             </div>
         </div>
         
         <div class="group-task-card">
-            <h4 style="color: #6E4644; margin-top: 0;">Flexible Task:</h4>
+            <h4 style="color: #6E4644; margin-top: 0;">📝 Task Options:</h4>
             <ul style="margin: 0; padding-left: 20px; line-height: 2;">
-                <li><strong>Solo:</strong> Write your analysis and share if comfortable</li>
-                <li><strong>Pair:</strong> Exchange analyses and discuss similarities</li>
-                <li><strong>Group:</strong> Create a collaborative playlist with explanations</li>
+                <li><strong>Solo:</strong> Fill out the analysis and reflect on your musical taste</li>
+                <li><strong>Pair:</strong> Exchange analyses - find similarities and differences</li>
+                <li><strong>Group:</strong> Share your songs and create a collaborative playlist</li>
             </ul>
+        </div>
+        
+        <div class="mt-20" style="background: rgba(178,11,19,0.1); padding: 20px; border-radius: 15px; border-left: 4px solid #B20B13;">
+            <p style="margin: 0; color: #6E4644;"><strong>💡 Tip:</strong> Use vocabulary from today's lesson: <em>soundtrack, nostalgic, upbeat, melody, lyrics</em></p>
         </div>
     `;
 }
@@ -356,19 +422,23 @@ function renderVocabBattle() {
         
         <div class="mt-20">
             ${shuffled.map((item, idx) => `
-                <div class="flip-card" style="height: auto; min-height: 150px;">
+                <div class="flip-card" onclick="this.classList.toggle('flipped')" style="height: 180px; position: relative;">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front" style="padding: 20px;">
+                        <div class="flip-card-front" style="position: relative; padding: 20px;">
                             <span style="font-family: 'Comfortaa', cursive; font-size: 1.3rem; color: #B20B13; font-weight: 600;">${item.word}</span>
                             <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-secondary);">Tap to check yourself</p>
                         </div>
-                        <div class="flip-card-back" style="padding: 20px;">
-                            <p style="font-weight: 600; color: #6E4644; margin-bottom: 10px;">${item.def}</p>
-                            <p style="font-style: italic; color: var(--text-secondary); font-size: 0.9rem;">"${item.ex}"</p>
+                        <div class="flip-card-back" style="position: relative; padding: 20px;">
+                            <p style="font-weight: 600; color: #6E4644; margin-bottom: 10px; font-size: 0.95rem;">${item.def}</p>
+                            <p style="font-style: italic; color: var(--text-secondary); font-size: 0.85rem;">"${item.ex}"</p>
                         </div>
                     </div>
                 </div>
             `).join('')}
+        </div>
+        
+        <div class="text-center mt-20">
+            <p style="color: #6E4644; font-size: 0.9rem; font-style: italic;">💡 Tip: Tap on each card to reveal the definition</p>
         </div>
     `;
 }
@@ -389,7 +459,7 @@ function renderReflection() {
             </ul>
         </div>
         
-        <button class="btn btn-primary mt-20" onclick="generateCheatSheet()" style="width: 100%;">📥 Download PDF Cheat Sheet</button>
+        <button class="btn btn-primary mt-20" onclick="generateCheatSheet()" style="width: 100%; background: #B20B13; border: none;">📥 Download PDF Cheat Sheet</button>
         
         <div class="text-center mt-20">
             <h3 style="color: var(--primary); font-family: 'Comfortaa', cursive;">Keep the music playing! 🎶✨</h3>
